@@ -1,0 +1,32 @@
+<!-- <ul>
+  <li *ngFor="let node of tree">
+    {{ node.name }}
+    <button (click)="addNode(node)">N</button>
+    <button (click)="addChild(node)">C</button>
+    <button (click)="removeNode(node)">R</button>
+
+    <app-tree [tree]="node.children"></app-tree>
+  </li>
+</ul> -->
+
+<ul>
+  <ng-template #recursiveTree let-tree>
+    <li *ngFor="let node of tree">
+      <span>{{ node.name }}</span>
+      <button *ngIf="node.depth === 1" (click)="addNode(node)">N</button>
+      <button (click)="addChild(node)">C</button>
+      <button (click)="removeNode(node)">R</button>
+      <ul *ngIf="node.children.length > 0" class="list">
+        <ng-container
+          *ngTemplateOutlet="
+            recursiveTree;
+            context: { $implicit: node.children }
+          "
+        ></ng-container>
+      </ul>
+    </li>
+  </ng-template>
+  <ng-container
+    *ngTemplateOutlet="recursiveTree; context: { $implicit: tree }"
+  ></ng-container>
+</ul>
